@@ -1,0 +1,100 @@
+<head>
+  <title>webagg</title>
+</head>
+
+<body>
+    
+    {{#if currentUser}}
+        {{> dashboard}}
+    {{else}}
+        {{> loginpage}}
+    {{/if}}
+</body>
+
+<template name="loginpage">
+    <div class="container">
+        <div class="flat-form">
+            <ul class="tabs">
+                <li><a href="#login" class="js-change-tab active">Login</a></li>
+                <li><a href="#register" class="js-change-tab">Register</a></li>
+                <li><a href="#reset" class="js-change-tab">Reset Password</a></li>
+            </ul>
+            <div id="login" class="form-action show">
+                <h1>Login on webapp</h1>
+                <p>If you just created an account pls input the email or username and password you provided, else register to login</p>
+                <form id="js-loginForm-submit">
+                    <ul>
+                        <li><input type="text" name="Username" placeholder="Username" /> </li>
+                        <li><input type="password" name="password" placeholder="Password" /></li>
+                        <li><input type="submit" value="Login" class="button" /></li>
+                    </ul>
+                </form>
+            </div>
+            <!--/#login.form-action-->
+            <div id="register" class="form-action hide">
+                <h1>Register</h1>
+                <p>
+                    You should totally sign up for our super awesome service.
+                    It's what all the cool kids are doing nowadays.
+                </p>
+                <form id="js-regForm-register">
+                    <ul>
+                        <li><input type="text" name="firstName" placeholder="First name" /><input type="text" name="lastName" placeholder="last name" /></li>
+                        <input type="text" name="Username" placeholder="Username" />
+                        <input type="text" name="Email" placeholder="Email" />
+                        <input type="date" name="dateOfBirth" placeholder="Date Of Birth" />
+                        <li><input type="password" name="password" placeholder="Password" /></li>
+                        <li><input type="password" name="passwordc" placeholder="Confirm Password" /></li>
+                        <li><input type="submit" value="Sign Up" class="button" /></li>
+                    </ul>
+                </form>
+            </div>
+            <!--/#register.form-action-->
+            <div id="reset" class="form-action hide">
+                <h1>Reset Password</h1>
+                <p>
+                    To reset your password enter your email and your birthday
+                    and we'll send you a link to reset your password.
+                </p>
+                <form>
+                    <ul>
+                        <li> <input type="text" placeholder="Email" /></li>
+                        <li><input type="text" placeholder="Birthday" /></li>
+                        <li><input type="submit" value="Send" class="button" /></li>
+                    </ul>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</template>
+
+<template name="dashboard">
+    
+    <input id="logout" type="submit" value="logout" class="button" />
+    
+    <div class="form-action">
+        <form id="js-submitForm-submit">
+            <ul>
+                <li><input type="text" name="title" placeholder="title" /> </li>
+                <li><input type="text" name="url" placeholder="url" /> </li>
+                <li><input type="text" name="description" placeholder="description" /> </li>
+                <li><input type="submit" value="submit" class="button" /></li>
+            </ul>
+        </form>
+        <p class='invalid'>invalid url</p>
+    </div>
+    
+    <div class="container">
+         <div class="row">
+        {{#each websites}}
+            <div class="col-md-3 col-xs-12" id="{{_id}}">
+                <a href="{{url}}">{{title}}</a>
+                <p>{{description}}</p>
+                <p>posted on {{createdOn}}</p>
+            </div>
+        {{/each}}    
+        </div>
+    </div>
+    
+</template>
