@@ -72,28 +72,38 @@
 <template name="dashboard">
     
     <input id="logout" type="submit" value="logout" class="button" />
-    
-    <div class="form-action">
-        <form id="js-submitForm-submit">
-            <ul>
-                <li><input type="text" name="title" placeholder="title" /> </li>
-                <li><input type="text" name="url" placeholder="url" /> </li>
-                <li><input type="text" name="description" placeholder="description" /> </li>
-                <li><input type="submit" value="submit" class="button" /></li>
-            </ul>
-        </form>
-        <p class='invalid'>invalid url</p>
+    <div class="container-fluid">
+        <div class="row contentRow">
+             
+        </div>
     </div>
     
-    <div class="container">
-         <div class="row">
-        {{#each websites}}
-            <div class="col-md-3 col-xs-12" id="{{_id}}">
-                <a href="{{url}}">{{title}}</a>
-                <p>{{description}}</p>
-                <p>posted on {{createdOn}}</p>
+    <div class="container-fluid">
+         <div class="row contentRow">
+             <div class="col-md-3 col-xs-12 contentForm">
+                <ul class="tabs"></ul>
+                <div class="form-action">
+                    <form id="js-submitForm-submit">
+                        <ul>
+                            <li><input type="text" name="title" placeholder="title" /> </li>
+                            <li><input type="text" name="url" placeholder="url" /> </li>
+                            <li><input type="text" name="description" placeholder="description" /> </li>
+                            <li><input type="submit" value="submit" class="button" /></li>
+                        </ul>
+                    </form>
+                    <p class='invalid'>invalid url</p>
+                </div>
             </div>
-        {{/each}}    
+            {{#each websites}}
+            <div class="col-md-3 col-xs-12 col-sm-12 contentCon" id="{{_id}}">
+                <ul class="tabs"></ul>
+                <div class="content">
+                    <a href="{{url}}">{{title}}</a>
+                    <p>{{description}}</p>
+                    <p>posted on {{createdOn}}</p>
+                </div>
+            </div>
+            {{/each}}    
         </div>
     </div>
     

@@ -171,3 +171,27 @@ form input[type=date]::-webkit-inner-spin-button {
 :-ms-input-placeholder {
   color: #e74c3c;
 }/* CSS declarations go here */
+.contentCon{
+    background: #34495e;
+    margin: 25px;
+    padding: 0px;
+    width: 320px;
+    height: 240px;
+    position: relative;
+    font-family: 'Roboto';
+}
+.contentForm{
+    background: #34495e;
+    margin: auto 25px auto 25px;
+    padding: 0px;
+    width: 320px;
+    height: 280px;
+    position: relative;
+    font-family: 'Roboto';
+}
+.content {
+    padding: 10px;
+}
+.contentRow {
+    margin-left: 40px;
+}
