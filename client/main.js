@@ -163,42 +163,19 @@ Template.dashboard.events({
     
     'click #logout':function () {
         Meteor.logout();
+    },
+    
+    'click .js-change-tab': function(event){
+        
+        event.preventDefault();
+        $('.js-change-tab.active.'+this._id).removeClass('active');
+        $(event.target).addClass('active');
+        
+        var href = $(event.target).attr('href'); 
+        $('.show.'+this._id).removeClass('show').addClass('hide').fadeOut(550).hide();
+        $(href).removeClass('hide').addClass('show').fadeIn(550).hide();
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

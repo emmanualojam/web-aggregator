@@ -96,11 +96,19 @@
             </div>
             {{#each websites}}
             <div class="col-md-3 col-xs-12 col-sm-12 contentCon" id="{{_id}}">
-                <ul class="tabs"></ul>
-                <div class="content">
+                <ul class="tabs">
+                    <li><a href="#user_{{_id}}" class="js-change-tab active {{_id}}">User Input</a></li>
+                    <li><a href="#web_{{_id}}" class="js-change-tab {{_id}}">Website information</a></li>
+                </ul>
+                
+                <div id="user_{{_id}}" class="content show {{_id}}">
                     <a href="{{url}}">{{title}}</a>
                     <p>{{description}}</p>
                     <p>posted on {{createdOn}}</p>
+                </div>
+                
+                <div id="web_{{_id}}" class="content hide {{_id}}">
+                    
                 </div>
             </div>
             {{/each}}    

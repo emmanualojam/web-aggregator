@@ -38,7 +38,6 @@ input:focus{
   padding: 0;
 }
 .tabs a {
-  background: #ed7271;  /*topbar c0392b  #88565b */
   display: block;
   float: left;
   text-decoration: none;
@@ -56,7 +55,7 @@ input:focus{
   text-align: center;
 }
 .tabs a.active {
-  background: #ed7271;  /*topbar e74c3c  */
+  background: #e74c3c;
   border-right: none;
   -webkit-transition: all 0.5s linear;
 	-moz-transition: all 0.5s linear;
