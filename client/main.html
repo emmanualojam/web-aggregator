@@ -3,7 +3,7 @@
 </head>
 
 <body>
-    
+    <!--would be using iron router instead on project is almost complete-->
     {{#if currentUser}}
         {{> dashboard}}
     {{else}}
@@ -30,7 +30,7 @@
                     </ul>
                 </form>
             </div>
-            <!--/#login.form-action-->
+            
             <div id="register" class="form-action hide">
                 <h1>Register</h1>
                 <p>
@@ -108,7 +108,15 @@
                 </div>
                 
                 <div id="web_{{_id}}" class="content hide {{_id}}">
-                    
+                   <p>ujgugujgjgkjhkhkhug</p> 
+                </div>
+                <div class="">
+                    <button data-toggle="tooltip" data-placement="right" title="upvoted by {{thumbsUpBy}}" type="button" class="js-thumbs-up like">
+                        <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>{{thumbsUp}}
+                    </button>
+                    <button data-toggle="tooltip" data-placement="left" title="downvoted by {{thumbsDownBy}}" type="button" class="js-thumbs-down unlike">
+                        <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>{{thumbsDown}}
+                    </button>
                 </div>
             </div>
             {{/each}}    

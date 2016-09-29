@@ -63,7 +63,7 @@ Template.loginpage.events({
     'submit #js-regForm-register':function(event){
         
         //stop browser from reloading the page so leaves all resposibility to meteor
-        //$.trim is to remoe empty spaces from the input fields
+        //$.trim is to remove empty spaces from the input fields
         event.preventDefault();
         var getfirstName = $.trim(event.target.firstName.value),
         getlastName = $.trim(event.target.lastName.value),
@@ -136,24 +136,34 @@ Template.dashboard.helpers({
 
 Template.dashboard.rendered = function() {
     $('.invalid').slideUp('fast');
+    $('[data-toggle="tooltip"]').tooltip({
+        'selector': '',
+        html: true,
+        'container':'body'
+  });
 }
 
 Template.dashboard.events({
     
-    'click input[type=text]': function () {
+    'click input[type=text]': function (event) {
         $('.invalid').slideUp('fast');
     },
     
     //submits to database
-    'submit #js-submitForm-submit': function () {
+    'submit #js-submitForm-submit': function (event) {
         var regex = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
-        
         if (regex.test(event.target.url.value)==true){
             Websites.insert({
                 title: event.target.title.value, 
                 url: event.target.url.value, 
                 description: event.target.description.value, 
-                createdOn: new Date()
+                createdOn: new Date(),
+                createdBy: Meteor.user().username,
+                thumbsUp: 0,
+                thumbsUpBy: "",
+                thumbsDown: 0,
+                thumbsDownBy: ""
+                
             });
         } else {
             $('.invalid').slideDown();
@@ -161,7 +171,7 @@ Template.dashboard.events({
         }
     },
     
-    'click #logout':function () {
+    'click #logout':function (event) {
         Meteor.logout();
     },
     
@@ -174,8 +184,55 @@ Template.dashboard.events({
         var href = $(event.target).attr('href'); 
         $('.show.'+this._id).removeClass('show').addClass('hide').fadeOut(550).hide();
         $(href).removeClass('hide').addClass('show').fadeIn(550).hide();
+    }, 
+    
+    'click .js-thumbs-up': function(event){
+        
+        var i = Websites.findOne({_id:this._id}).thumbsUp; 
+        var p = Websites.findOne({_id:this._id}).thumbsUpBy;
+        var z = Meteor.user().username;
+        
+        if (p.indexOf(z)==-1){
+            i++;
+            p+=Meteor.user().username;
+            Websites.update({_id: this._id}, {$set: {thumbsUp: i}});
+            Websites.update({_id: this._id}, {$set: {thumbsUpBy: p+"<br>"}});
+            return false;
+        } 
+        if (p.indexOf(z)>=0){
+            i--;
+            p = p.replace((z+"<br>"), "");
+            Websites.update({_id: this._id}, {$set: {thumbsUp: i}});
+            Websites.update({_id: this._id}, {$set: {thumbsUpBy: p}});
+            return false;
+        }
+    },
+    
+    'click .js-thumbs-down': function(event){
+        
+        var i = Websites.findOne({_id:this._id}).thumbsDown; 
+        var p = Websites.findOne({_id:this._id}).thumbsDownBy;
+        var z = Meteor.user().username;
+        
+        if (p.indexOf(z)==-1){
+            i++;
+            p+=Meteor.user().username;
+            Websites.update({_id: this._id}, {$set: {thumbsDown: i}});
+            Websites.update({_id: this._id}, {$set: {thumbsDownBy: p+"<br>"}});
+            return false;
+        } 
+        if (p.indexOf(z)>=0){
+            i--;
+            p = p.replace((z+"<br>"), "");
+            Websites.update({_id: this._id}, {$set: {thumbsDown: i}});
+            Websites.update({_id: this._id}, {$set: {thumbsDownBy: p}});
+            return false;
+        }
     }
 });
+
+
+
 
 
 
