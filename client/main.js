@@ -3,8 +3,6 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import './main.html';
 
-
-
 Template.loginpage.events({
     'click .js-change-tab': function(event){
         
@@ -210,9 +208,9 @@ Template.dashboard.events({
     
     'click .js-thumbs-down': function(event){
         
-        var i = Websites.findOne({_id:this._id}).thumbsDown; 
-        var p = Websites.findOne({_id:this._id}).thumbsDownBy;
-        var z = Meteor.user().username;
+        var i = Websites.findOne({_id:this._id}).thumbsDown, 
+            p = Websites.findOne({_id:this._id}).thumbsDownBy,
+            z = Meteor.user().username;
         
         if (p.indexOf(z)==-1){
             i++;
@@ -227,6 +225,17 @@ Template.dashboard.events({
             Websites.update({_id: this._id}, {$set: {thumbsDown: i}});
             Websites.update({_id: this._id}, {$set: {thumbsDownBy: p}});
             return false;
+        }
+    }, 
+    
+    'click .js-delete': function(event){
+        if((Websites.findOne({_id:this._id}).createdBy)==(Meteor.user().username)){
+            var p=this._id; p;
+            $('#'+this._id).hide("slow", function(){
+                Websites.remove(p);
+            });
+        } else {
+            console.log("delete not permitted on website not uploaded by user");
         }
     }
 });
