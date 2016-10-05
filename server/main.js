@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { HTTP } from 'meteor/http';
 
 Meteor.startup(() => {
   if (!Websites.findOne()){
@@ -53,4 +54,15 @@ Accounts.onCreateUser(function(options, user) {
     DateOfBirth: options.DateOfBirth
   };
   return user;
+});
+
+
+Meteor.methods({
+    httpRequest: function(url) {
+        try {
+          return HTTP.call('GET', url, {}); // or you could use HTTP.get(url, {});
+        } catch (error) {
+          throw new Meteor.error('error', 'something bad happened')
+        }
+    }
 });

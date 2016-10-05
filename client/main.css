@@ -152,21 +152,25 @@ form input[type=date]::-webkit-inner-spin-button {
 .button:active {
   background: #136899 important;
 }
-.like, .unlike {
+.like, .unlike, .comments {
     border: none;
     height: 30px;
     width: 60px;
     background: #ed7271;
     color: #ffffff;
 }
-.like:hover, .unlike:hover {
+.like:hover, .unlike:hover, .comments:hover {
     background: #1e75aa;
 }
 .like {
     margin-left: 10px;
+    margin-right: 10px;
 }
 .unlike {
-    margin-left: 175px;
+    margin-left: 10px;
+}
+.comments{
+    width: 150px;
 }
 
 ::-webkit-input-placeholder {
@@ -186,7 +190,6 @@ form input[type=date]::-webkit-inner-spin-button {
 .contentCon{
     background: #34495e;
     margin: 25px;
-    padding: 0px;
     width: 320px;
     height: 240px;
     position: relative;
@@ -207,6 +210,9 @@ form input[type=date]::-webkit-inner-spin-button {
 .contentRow {
     margin-left: 40px;
 }
-div.tolltip-inner{
-    max-width: 350px;
+.delete {
+    margin: 9px 0 0 0;
+}
+.tooltip-inner {
+    max-width: 500px !important;
 }

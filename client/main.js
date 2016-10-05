@@ -3,6 +3,26 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import './main.html';
 
+
+Router.route('/', function () {
+    if (Meteor.userId()){
+        this.render('dashboard');
+    } 
+    else {
+        this.render('loginpage');
+    }
+});
+
+Router.route('/:_id', function (){
+    if (Meteor.userId()){
+        this.render('website', {
+            data:function () {return Websites.findOne({_id:this.params._id});}
+        });
+    } else {
+        this.render('loginpage');
+    }
+});
+
 Template.loginpage.events({
     'click .js-change-tab': function(event){
         
@@ -131,15 +151,10 @@ Template.dashboard.helpers({
         return Websites.find({});
     }
 });
-
-Template.dashboard.rendered = function() {
+Template.dashboard.onRendered(function() {
     $('.invalid').slideUp('fast');
-    $('[data-toggle="tooltip"]').tooltip({
-        'selector': '',
-        html: true,
-        'container':'body'
-  });
-}
+    this.$('[data-toggle="tooltip"]').tooltip();
+});
 
 Template.dashboard.events({
     
@@ -149,6 +164,9 @@ Template.dashboard.events({
     
     //submits to database
     'submit #js-submitForm-submit': function (event) {
+        
+        event.preventDefault();
+        
         var regex = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
         if (regex.test(event.target.url.value)==true){
             Websites.insert({
@@ -161,8 +179,8 @@ Template.dashboard.events({
                 thumbsUpBy: "",
                 thumbsDown: 0,
                 thumbsDownBy: ""
-                
             });
+            
         } else {
             $('.invalid').slideDown();
             return false;
@@ -182,7 +200,21 @@ Template.dashboard.events({
         var href = $(event.target).attr('href'); 
         $('.show.'+this._id).removeClass('show').addClass('hide').fadeOut(550).hide();
         $(href).removeClass('hide').addClass('show').fadeIn(550).hide();
-    }, 
+        
+    },
+    
+    'click .js-web': function(event){
+        
+        event.preventDefault();
+        var url = Websites.findOne({_id:this._id}).url;
+        Meteor.call("httpRequest", url, (error, result) => {
+              if (error) {
+                // do something with the error
+              } else {
+               console.log(result);
+              }
+        });
+    },
     
     'click .js-thumbs-up': function(event){
         
@@ -194,12 +226,12 @@ Template.dashboard.events({
             i++;
             p+=Meteor.user().username;
             Websites.update({_id: this._id}, {$set: {thumbsUp: i}});
-            Websites.update({_id: this._id}, {$set: {thumbsUpBy: p+"<br>"}});
+            Websites.update({_id: this._id}, {$set: {thumbsUpBy: p+"&#13;&#10;"}});
             return false;
         } 
         if (p.indexOf(z)>=0){
             i--;
-            p = p.replace((z+"<br>"), "");
+            p = p.replace((z+"&#13;&#10;"), "");
             Websites.update({_id: this._id}, {$set: {thumbsUp: i}});
             Websites.update({_id: this._id}, {$set: {thumbsUpBy: p}});
             return false;
@@ -216,17 +248,22 @@ Template.dashboard.events({
             i++;
             p+=Meteor.user().username;
             Websites.update({_id: this._id}, {$set: {thumbsDown: i}});
-            Websites.update({_id: this._id}, {$set: {thumbsDownBy: p+"<br>"}});
+            Websites.update({_id: this._id}, {$set: {thumbsDownBy: p+"&#13;&#10;"}});
             return false;
         } 
         if (p.indexOf(z)>=0){
             i--;
-            p = p.replace((z+"<br>"), "");
+            p = p.replace((z+"&#13;&#10;"), "");
             Websites.update({_id: this._id}, {$set: {thumbsDown: i}});
             Websites.update({_id: this._id}, {$set: {thumbsDownBy: p}});
             return false;
         }
     }, 
+    
+    'click .js-comments': function(event){
+        console.log("saw click");
+        window.location.pathname='/'+this._id;
+    },
     
     'click .js-delete': function(event){
         if((Websites.findOne({_id:this._id}).createdBy)==(Meteor.user().username)){
@@ -240,11 +277,32 @@ Template.dashboard.events({
     }
 });
 
+Template.website.events({
+    
+    'submit #js-submit-comments': function(event){
+        var sorter = this._id; sorter;
+        event.preventDefault();
+        if ((event.target.comment.value)!==""){
+            console.log(event.target.comment.value);
+            
+            Comments.insert({
+                comment: event.target.comment.value,
+                createdOn: new Date(),
+                createdBy: Meteor.user().username,
+                sort_Id: sorter
+            });
+        } else {
+            
+        }
+    }
+});
 
-
-
-
-
+Template.website.helpers({
+    comments :function(){
+        var sorter = this._id; sorter;
+        return Comments.find({sort_Id:sorter});
+    }
+});
 
 
 
