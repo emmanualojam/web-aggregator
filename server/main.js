@@ -47,6 +47,8 @@ Meteor.startup(() => {
     }
 });
 
+
+
 Accounts.onCreateUser(function(options, user) {
   user.profile = {
     FirstName: options.FirstName,
@@ -60,9 +62,11 @@ Accounts.onCreateUser(function(options, user) {
 Meteor.methods({
     httpRequest: function(url) {
         try {
-          return HTTP.call('GET', url, {}); // or you could use HTTP.get(url, {});
+          return HTTP.call('GET', url, {});
         } catch (error) {
           throw new Meteor.error('error', 'something bad happened')
         }
     }
 });
+
+

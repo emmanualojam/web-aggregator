@@ -6,6 +6,11 @@
 
 </body>
 
+<template name="ApplicationLayout">
+    {{>yield "navbar"}}
+    {{>yield "main"}}
+</template>
+
 <template name="loginpage">
     <div class="container">
         <div class="flat-form">
@@ -63,13 +68,103 @@
     </div>
 </template>
 
+<template name="nav">
+    <nav class="container-fluid">
+        <nav class="nav-bar-top">
+            <div class="nav-content">
+                <form class="search">
+                   <input class="inp" type="text" name="title" placeholder="title" /> 
+                </form>
+                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            </div>
+            <input id="logout" type="submit" value="logout" class="button" />
+        </nav>
+    </nav>
+</template>
+
+<template name="search">
+    <style>
+        .inp{
+            opacity: 1;
+            width: 400px !important;
+            font-size: 20px;
+        }
+        .search {
+            float: none;
+            position: absolute;
+            top: 10%;
+            left: 47%;
+            width: 400px;
+            height: 200px;
+            margin: 0px 0 0 -150px;
+        }
+        .overlay{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            background-color: rgba(255, 255, 255,0.9);
+        }
+    </style>
+    <section class="overlay">
+        <div class="page-header clearfix">
+            <div class="pull-center">
+                <form class="search">
+                   <input id="edValue" class="inp" type="text" name="searchinp" placeholder="search" />
+                </form>
+            </div>
+        </div>
+        <div class="container-fluid">
+             <div class="row contentRow">
+                {{#each results}}
+                <div class="col-md-3 col-xs-12 col-sm-12 contentCon" id="{{_id}}">
+                    <ul class="tabs">
+                        <li><a href="#user_{{_id}}" class="js-change-tab active {{_id}}">User Input</a></li>
+                        <button class="js-delete btn btn-danger btn-xs delete">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                        <li><a href="#web_{{_id}}" class="js-change-tab js-web {{_id}}">Website information</a></li>
+
+                    </ul>
+
+                    <div id="user_{{_id}}" class="content show {{_id}}">
+                        <a href="{{url}}">{{title}}</a>
+                        <p>{{description}}</p>
+                        <p>posted on {{createdOn}}</p>
+                    </div>
+
+                    <div id="web_{{_id}}" class="content hide {{_id}}">
+                       <p>{{metadata}}</p> 
+                    </div>
+                    <div class="thumbs">
+                        <button data-toggle="tooltip" data-placement="right" title="upvoted by {{thumbsUpBy}}" type="button" class="js-thumbs-up btn like">
+                            <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>{{thumbsUp}}
+                        </button>
+
+                        <button data-toggle="tooltip" data-placement="bottom" title="comments by {{commentsBy}}" type="button" class="js-comments btn comments">
+                            <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>{{commentsNo}} Comments
+                        </button>
+
+                        <button data-toggle="tooltip" data-placement="left" title="downvoted by {{thumbsDownBy}}" type="button" class="js-thumbs-down btn unlike">
+                            <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>{{thumbsDown}}
+                        </button>
+                    </div>
+                </div>
+                {{/each}}    
+            </div>
+        </div>
+    </section>
+    
+</template>
+
 <template name="dashboard">
     <style>
         .contentCon{
             padding: 0px;
         }
     </style>
-    <input id="logout" type="submit" value="logout" class="button" />
     <div class="container-fluid">
         <div class="row contentRow">
              
@@ -99,7 +194,7 @@
                     <button class="js-delete btn btn-danger btn-xs delete">
                         <span class="glyphicon glyphicon-trash"></span>
                     </button>
-                    <li><a href="#web_{{_id}}" class="js-change-tab js-web {{_id}}">Website information</a></li>
+                    <li><a href="#web_{{_id}}" class="js-change-tab js-web {{_id}}">Http content</a></li>
                     
                 </ul>
                 
@@ -110,7 +205,7 @@
                 </div>
                 
                 <div id="web_{{_id}}" class="content hide {{_id}}">
-                   <p>http generated content</p> 
+                   <p>{{> meta}}</p>
                 </div>
                 <div class="thumbs">
                     <button data-toggle="tooltip" data-placement="right" title="upvoted by {{thumbsUpBy}}" type="button" class="js-thumbs-up btn like">
@@ -150,12 +245,17 @@
     </style>
     <div class="container contentCon" id="{{_id}}">
         <div class="row">
-            <ul class="col-md-12 col-sm-12 col-xs-12 col-lg-12 tabs">
-                <li><a href="#user_{{_id}}" class="{{_id}}">User Input</a></li>
-                <button class="js-delete btn btn-danger btn-xs delete">
-                    <span class="glyphicon glyphicon-trash"></span>
-                </button>
-                <li class="js-web"><a href="#web_{{_id}}" class="{{_id}}">Website information</a></li>
+            <ul class="col-md-12 col-sm-12 col-xs-12 col-lg-12 tabs thumbs">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <div class="dropdown">
+                     <button class="dropbtn">Options</button>
+                    <div id="myDropdown" class="dropdown-content">
+                        <a href="#"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>{{thumbsUp}}</a>
+                        <a href="#"><span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>{{thumbsDown}}</a>
+                        <a href="#"><span class="glyphicon glyphicon-trash"></span>...</a>
+                    </div>
+                </div>
+                
             </ul>
 
             <div id="user_{{_id}}" class="col-md-6 col-sm-6 col-xs-6 col-lg-6 content {{_id}}">
@@ -167,15 +267,6 @@
             <div id="web_{{_id}}" class="col-md-6 col-sm-6 col-xs-6 col-lg-6 content {{_id}}">
                <p class="">http generated content</p> 
             </div>
-            <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 thumbs">
-                <button data-container="body" data-toggle="tooltip" data-placement="right" title="upvoted by {{thumbsUpBy}}" type="button" class="js-thumbs-up btn like">
-                    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>{{thumbsUp}}
-                </button>
-                
-                <button data-container="body" data-toggle="tooltip" data-placement="left" title="downvoted by {{thumbsDownBy}}" type="button" class="js-thumbs-down btn unlike">
-                    <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>{{thumbsDown}}
-                </button>
-            </div>
         </div>
         <div class="form-action">
             <form id="js-submit-comments">
@@ -185,18 +276,27 @@
                 </ul>
             </form>
         </div>
-        {{#each comments}}
-        <p>{{comment}}</p>
-        <p>{{createdOn}}</p>
-        <p>{{createdBy}}</p>
-        {{/each}}
+       
+        <div class="row">
+            {{#each comments}}
+            <div class="col-md-8">
+                <div class="comment-box">
+                    <p>{{comment}}</p> 
+                    <h4>{{createdBy}}</h4> 
+                    <code>{{createdOn}}</code>
+                </div>
+            </div>
+            {{/each}}
+        </div>
     </div>
 </template>
 
 
-
-
-
+<template name="meta">
+    <p>{{Result.name}}</p>
+    <p>{{Result.description}}</p>
+    <p>{{Result.images}}</p>
+</template>
 
 
 

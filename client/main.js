@@ -3,23 +3,62 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import './main.html';
 
+Router.configure({
+   layoutTemplate: 'ApplicationLayout'
+});
+
+Router.route('/meta', function(){
+    this.render('meta', {
+       to:"main" 
+    });
+});
 
 Router.route('/', function () {
     if (Meteor.userId()){
-        this.render('dashboard');
+        this.render('nav', {
+            to:"navbar"          
+        });
+        this.render('dashboard', {
+            to:"main"
+        });
     } 
     else {
+        this.render('loginpage', {
+            to:"main"
+        });
+    }
+});
+
+Router.route('/search', function (){
+    if (Meteor.userId()){
+        this.render('search', {
+            to: "main"
+        });
+    } else {
         this.render('loginpage');
     }
 });
 
 Router.route('/:_id', function (){
     if (Meteor.userId()){
+        this.render('nav', {
+            to:"navbar"          
+        });
         this.render('website', {
-            data:function () {return Websites.findOne({_id:this.params._id});}
+            data:function () {return Websites.findOne({_id:this.params._id});},
+            to:"main"
         });
     } else {
         this.render('loginpage');
+    }
+});
+
+Template.nav.events({
+    'click #logout':function (event) {
+        Meteor.logout();
+    },
+    'click .glyphicon-search': function(event) {
+        $('.inp').toggleClass('searchOP');
     }
 });
 
@@ -145,13 +184,11 @@ Template.loginpage.events({
 });
 
 Template.dashboard.helpers({
-    
-    //imports from database
     websites :function(){
         return Websites.find({});
     }
 });
-Template.dashboard.onRendered(function() {
+Template.dashboard.onRendered(function(template) {
     $('.invalid').slideUp('fast');
     this.$('[data-toggle="tooltip"]').tooltip();
 });
@@ -187,10 +224,6 @@ Template.dashboard.events({
         }
     },
     
-    'click #logout':function (event) {
-        Meteor.logout();
-    },
-    
     'click .js-change-tab': function(event){
         
         event.preventDefault();
@@ -203,13 +236,13 @@ Template.dashboard.events({
         
     },
     
-    'click .js-web': function(event){
+   'click .js-web': function(event){
         
         event.preventDefault();
         var url = Websites.findOne({_id:this._id}).url;
         Meteor.call("httpRequest", url, (error, result) => {
               if (error) {
-                // do something with the error
+                console.log(error);
               } else {
                console.log(result);
               }
@@ -270,6 +303,7 @@ Template.dashboard.events({
             var p=this._id; p;
             $('#'+this._id).hide("slow", function(){
                 Websites.remove(p);
+                Comments.remove({sort_Id: p});
             });
         } else {
             console.log("delete not permitted on website not uploaded by user");
@@ -294,6 +328,10 @@ Template.website.events({
         } else {
             
         }
+    },
+    
+    'click .dropbtn':function(event){
+        document.getElementById("myDropdown").classList.toggle("show");
     }
 });
 
@@ -304,9 +342,34 @@ Template.website.helpers({
     }
 });
 
+Template.search.onCreated(function(){
+    this.textd = new ReactiveVar('');
+});
 
+Template.search.helpers({
+    results: function() {
+        let textd = Template.instance().textd.get();
+        if(textd!==""){
+             return Websites.find({ 
+                $or: [
+                    {title: {$regex: textd}},
+                    {url: {$regex: textd}},
+                    {description: {$regex: textd}},
+                    {createdBy: {$regex: textd}}
+                ]
+            });
+        } else {
+            return false;
+        }
+    }
+});
 
+Template.search.events({
+    'keyup .inp': function(event, template) {
+        template.textd.set(document.getElementById("edValue").value);
+        console.log(document.getElementById("edValue").value);
+    }
+}); 
 
-
-
-
+                 
+                 
