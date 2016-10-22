@@ -30,7 +30,7 @@
                     </ul>
                 </form>
             </div>
-            
+
             <div id="register" class="form-action hide">
                 <h1>Register</h1>
                 <p>
@@ -63,7 +63,7 @@
                     </ul>
                 </form>
             </div>
-            
+
         </div>
     </div>
 </template>
@@ -72,12 +72,9 @@
     <nav class="container-fluid">
         <nav class="nav-bar-top">
             <div class="nav-content">
-                <form class="search">
-                   <input class="inp" type="text" name="title" placeholder="title" /> 
-                </form>
                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                <input id="logout" type="submit" value="logout" class="button" />
             </div>
-            <input id="logout" type="submit" value="logout" class="button" />
         </nav>
     </nav>
 </template>
@@ -136,7 +133,7 @@
                     </div>
 
                     <div id="web_{{_id}}" class="content hide {{_id}}">
-                       <p>{{metadata}}</p> 
+                       <p>{{metadata}}</p>
                     </div>
                     <div class="thumbs">
                         <button data-toggle="tooltip" data-placement="right" title="upvoted by {{thumbsUpBy}}" type="button" class="js-thumbs-up btn like">
@@ -152,11 +149,11 @@
                         </button>
                     </div>
                 </div>
-                {{/each}}    
+                {{/each}}
             </div>
         </div>
     </section>
-    
+
 </template>
 
 <template name="dashboard">
@@ -167,10 +164,10 @@
     </style>
     <div class="container-fluid">
         <div class="row contentRow">
-             
+
         </div>
     </div>
-    
+
     <div class="container-fluid">
          <div class="row contentRow">
              <div class="col-md-3 col-xs-12 contentForm">
@@ -195,15 +192,15 @@
                         <span class="glyphicon glyphicon-trash"></span>
                     </button>
                     <li><a href="#web_{{_id}}" class="js-change-tab js-web {{_id}}">Http content</a></li>
-                    
+
                 </ul>
-                
+
                 <div id="user_{{_id}}" class="content show {{_id}}">
                     <a href="{{url}}">{{title}}</a>
                     <p>{{description}}</p>
                     <p>posted on {{createdOn}}</p>
                 </div>
-                
+
                 <div id="web_{{_id}}" class="content hide {{_id}}">
                    <p>{{> meta}}</p>
                 </div>
@@ -211,20 +208,20 @@
                     <button data-toggle="tooltip" data-placement="right" title="upvoted by {{thumbsUpBy}}" type="button" class="js-thumbs-up btn like">
                         <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>{{thumbsUp}}
                     </button>
-                    
+
                     <button data-toggle="tooltip" data-placement="bottom" title="comments by {{commentsBy}}" type="button" class="js-comments btn comments">
                         <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>{{commentsNo}} Comments
                     </button>
-                    
+
                     <button data-toggle="tooltip" data-placement="left" title="downvoted by {{thumbsDownBy}}" type="button" class="js-thumbs-down btn unlike">
                         <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>{{thumbsDown}}
                     </button>
                 </div>
             </div>
-            {{/each}}    
+            {{/each}}
         </div>
     </div>
-    
+
 </template>
 
 
@@ -255,7 +252,7 @@
                         <a href="#"><span class="glyphicon glyphicon-trash"></span>...</a>
                     </div>
                 </div>
-                
+
             </ul>
 
             <div id="user_{{_id}}" class="col-md-6 col-sm-6 col-xs-6 col-lg-6 content {{_id}}">
@@ -265,7 +262,7 @@
             </div>
 
             <div id="web_{{_id}}" class="col-md-6 col-sm-6 col-xs-6 col-lg-6 content {{_id}}">
-               <p class="">http generated content</p> 
+               <p class="">http generated content</p>
             </div>
         </div>
         <div class="form-action">
@@ -276,13 +273,13 @@
                 </ul>
             </form>
         </div>
-       
+
         <div class="row">
             {{#each comments}}
             <div class="col-md-8">
                 <div class="comment-box">
-                    <p>{{comment}}</p> 
-                    <h4>{{createdBy}}</h4> 
+                    <p>{{comment}}</p>
+                    <h4>{{createdBy}}</h4>
                     <code>{{createdOn}}</code>
                 </div>
             </div>
@@ -297,11 +294,3 @@
     <p>{{Result.description}}</p>
     <p>{{Result.images}}</p>
 </template>
-
-
-
-
-
-
-
-

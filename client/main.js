@@ -52,13 +52,12 @@ Router.route('/:_id', function (){
         this.render('loginpage');
     }
 });
-
 Template.nav.events({
     'click #logout':function (event) {
         Meteor.logout();
     },
     'click .glyphicon-search': function(event) {
-        $('.inp').toggleClass('searchOP');
+        window.location.pathname='/'+"search";
     }
 });
 
@@ -119,8 +118,6 @@ Template.loginpage.events({
     },
     'submit #js-regForm-register':function(event){
 
-        //stop browser from reloading the page so leaves all resposibility to meteor
-        //$.trim is to remove empty spaces from the input fields
         event.preventDefault();
         var getfirstName = $.trim(event.target.firstName.value),
         getlastName = $.trim(event.target.lastName.value),

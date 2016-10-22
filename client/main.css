@@ -294,18 +294,30 @@ form input[type=date]::-webkit-inner-spin-button {
     cursor: pointer;
  }
  .search {
-    float: left; 
+    float: left;
 }
  .inp{
-    float: left; 
+    float: left;
     background-color: rgba(22, 22, 0, 0.5);
     display: block;
     width: 150px !important;
-    opacity: 0;
+    opacity: 1;
     -webkit-transition: .25s opacity ease-out, .75s transform ease-out;
     -o-transition: .25s opacity ease-out, .75s transform ease-out;
     transition: .25s opacity ease-out, .75s transform ease-out;
  }
-.searchOP {
-    opacity: 1;
+#logout {
+  margin: 5px 0px 0px 0px;
+  float: right;
+}
+.glyphicon-search {
+  margin: 10px 0px 0px 160px;
+  font-size: 30px;
+}
+.glyphicon-chevron-left{
+  margin: 5px;
+  font-size: 25px;
+}
+.contentRow {
+  margin-top: 25px;
 }
