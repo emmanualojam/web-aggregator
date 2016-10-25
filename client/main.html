@@ -202,7 +202,11 @@
                 </div>
 
                 <div id="web_{{_id}}" class="content hide {{_id}}">
-                   <p>{{> meta}}</p>
+                  <img class="webimg" src="{{imageWebs}}" />
+                  <p class="limitTextTitle">{{{titleWeb}}}</p>
+                  <br>
+                  <p class="limitTextDesc">{{{descriptionWeb}}}</p>
+
                 </div>
                 <div class="thumbs">
                     <button data-toggle="tooltip" data-placement="right" title="upvoted by {{thumbsUpBy}}" type="button" class="js-thumbs-up btn like">
@@ -255,14 +259,12 @@
 
             </ul>
 
-            <div id="user_{{_id}}" class="col-md-6 col-sm-6 col-xs-6 col-lg-6 content {{_id}}">
-                <a href="{{url}}">{{title}}</a>
-                <p>{{description}}</p>
-                <p>posted on {{createdOn}}</p>
-            </div>
-
-            <div id="web_{{_id}}" class="col-md-6 col-sm-6 col-xs-6 col-lg-6 content {{_id}}">
-               <p class="">http generated content</p>
+            <div id="user_{{_id}}" class="col-md-12 col-sm-12 col-xs-12 col-lg-12 content {{_id}}">
+              <a href="{{url}}"><img class="webimgCom" src="{{imageWebs}}" /></a>
+              <p class="tle">{{{titleWeb}}}</p>
+              <br>
+              <p class="">{{{descriptionWeb}}}. {{description}}</p>
+              <p>posted on {{createdOn}}</p>
             </div>
         </div>
         <div class="form-action">
@@ -286,11 +288,4 @@
             {{/each}}
         </div>
     </div>
-</template>
-
-
-<template name="meta">
-    <p>{{Result.name}}</p>
-    <p>{{Result.description}}</p>
-    <p>{{Result.images}}</p>
 </template>

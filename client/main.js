@@ -181,27 +181,17 @@ Template.loginpage.events({
 });
 
 Template.dashboard.helpers({
-    websites :function(){
+    websites: function(){
         return Websites.find({});
-    },
-    metadata: function(){
-        Meteor.call("httpRequest", this.url, (error, result) => {
-              if (error) {
-                return error;
-              } else {
-                htmlRaw = result.content;
-                return htmlRaw;
-              }
-        });
     }
 });
+
 Template.dashboard.onRendered(function(template) {
     $('.invalid').slideUp('fast');
     this.$('[data-toggle="tooltip"]').tooltip();
 });
 
 Template.dashboard.events({
-
     'click input[type=text]': function (event) {
         $('.invalid').slideUp('fast');
     },
@@ -210,20 +200,29 @@ Template.dashboard.events({
     'submit #js-submitForm-submit': function (event) {
 
         event.preventDefault();
-
+        var link = event.target.url.value;
+        if (link.indexOf("http")==-1){
+          link = "http://"+link;
+        }
         var regex = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
         if (regex.test(event.target.url.value)==true){
             Websites.insert({
                 title: event.target.title.value,
-                url: event.target.url.value,
+                url: link,
                 description: event.target.description.value,
                 createdOn: new Date(),
                 createdBy: Meteor.user().username,
                 thumbsUp: 0,
                 thumbsUpBy: "",
                 thumbsDown: 0,
-                thumbsDownBy: ""
+                thumbsDownBy: "",
+                descriptionWeb: "",
+                titleWeb: "",
+                imageWebs: ""
             });
+            event.target.title.value = "";
+            event.target.description.value = "";
+            event.target.url.value = "";
 
         } else {
             $('.invalid').slideDown();
@@ -246,93 +245,90 @@ Template.dashboard.events({
    'click .js-web': function(event){
 
         event.preventDefault();
-        var url = Websites.findOne({_id:this._id}).url;
-        Meteor.call("httpRequest", url, (error, result) => {
-              if (result) {
 
-                  if ((result.content).indexOf('<meta property="og') !== -1){
-                      var engineDes = (result.content).substring((result.content).lastIndexOf('<meta property="og:description"')+30);
-                      var descript = engineDes.slice(0, engineDes.indexOf('>'));
-                      descript = descript.replace(/content="/g, '');
-                      descript = descript.replace(/"/g, '');
-                      descript = descript.replace(/\//g, '');
-                      descript = $.trim(descript);
+        //check if content already in database
+        if (Websites.findOne({_id:this._id}).descriptionWeb==""){
+          var url = Websites.findOne({_id:this._id}).url;
+          Meteor.call("httpRequest", url, (error, result) => {
+            console.log(result.content);
 
-                      var engineTitle = (result.content).substring((result.content).lastIndexOf('<meta property="og:title"')+24);
-                      var titleWeb1 = engineTitle.slice(0, engineTitle.indexOf('>'));
-                      titleWeb1 = titleWeb1.replace(/content="/g, '');
-                      titleWeb1 = titleWeb1.replace(/"/g, '');
-                      titleWeb1 = titleWeb1.replace(/\//g, '');
-                      titleWeb1 = $.trim(titleWeb1);
+            //check if result is ready
+                if (result) {
+                  //process data for og property
+                    if ((result.content).indexOf('<meta property="og') !== -1){
+                        var engineDes = (result.content).substring((result.content).lastIndexOf('<meta property="og:description"')+30);
+                        var descript = engineDes.slice(0, engineDes.indexOf('>'));
+                        descript = descript.replace(/content="/g, '');
+                        descript = descript.replace(/"/g, '');
+                        descript = descript.replace(/\//g, '');
+                        descript = $.trim(descript);
 
-                      var engineTitle = (result.content).substring((result.content).lastIndexOf('<meta property="og:site_name"')+29);
-                      var titleWeb2 = engineTitle.slice(0, engineTitle.indexOf('>'));
-                      titleWeb2 = titleWeb2.replace(/content="/g, '');
-                      titleWeb2 = titleWeb2.replace(/"/g, '');
-                      titleWeb2 = titleWeb2.replace(/\//g, '');
-                      titleWeb2 = $.trim(titleWeb2);
-                      var title = titleWeb2+". "+titleWeb1;
+                        var engineTitle = (result.content).substring((result.content).lastIndexOf('<meta property="og:title"')+24);
+                        var titleWeb1 = engineTitle.slice(0, engineTitle.indexOf('>'));
+                        titleWeb1 = titleWeb1.replace(/content="/g, '');
+                        titleWeb1 = titleWeb1.replace(/"/g, '');
+                        titleWeb1 = titleWeb1.replace(/\//g, '');
+                        titleWeb1 = $.trim(titleWeb1);
 
-                      var engineImage = (result.content).substring((result.content).lastIndexOf('<meta property="og:image"')+24);
-                      var imageWeb = engineImage.slice(0, engineImage.indexOf('>'));
-                      imageWeb = imageWeb.replace(/content="/g, '');
-                      if (imageWeb.charAt((imageWeb.length)-1) === "/"){
-                        imageWeb = imageWeb.slice(0, -1);
-                      }
-                      imageWeb = imageWeb.replace(/"/g, '');
-                      imageWeb = $.trim(imageWeb);
+                        var engineTitle = (result.content).substring((result.content).lastIndexOf('<meta property="og:site_name"')+29);
+                        var titleWeb2 = engineTitle.slice(0, engineTitle.indexOf('>'));
+                        titleWeb2 = titleWeb2.replace(/content="/g, '');
+                        titleWeb2 = titleWeb2.replace(/"/g, '');
+                        titleWeb2 = titleWeb2.replace(/\//g, '');
+                        titleWeb2 = $.trim(titleWeb2);
+                        var title = titleWeb2+". "+titleWeb1;
 
-                      var webCon={};
-                      webCon = {
-                        "descript":descript,
-                        "title":title,
-                        "imageWeb":imageWeb
-                      };
-                      console.log(webCon);
-                  } else if ((result.content).indexOf('<meta name="description"') !== -1){
-                      var engineDes = (result.content).substring((result.content).lastIndexOf('<title>')+7);
-                      var title = engineDes.slice(0, engineDes.indexOf('</title>'));
-                      title = title.replace(/content="/g, '');
-                      title = title.replace(/"/g, '');
-                      title = $.trim(title);
+                        var engineImage = (result.content).substring((result.content).lastIndexOf('<meta property="og:image"')+24);
+                        var imageWeb = engineImage.slice(0, engineImage.indexOf('>'));
+                        imageWeb = imageWeb.replace(/content="/g, '');
+                        if (imageWeb.charAt((imageWeb.length)-1) === "/"){
+                          imageWeb = imageWeb.slice(0, -1);
+                        }
+                        imageWeb = imageWeb.replace(/"/g, '');
+                        imageWeb = $.trim(imageWeb);
 
-                      var engineDes = (result.content).substring((result.content).lastIndexOf('<meta name="description"')+24);
-                      var descript = engineDes.slice(0, engineDes.indexOf('>'));
-                      descript = descript.replace(/content="/g, '');
-                      descript = descript.replace(/"/g, '');
-                      descript = descript.replace(/\//g, '');
-                      descript = $.trim(descript);
+                        Websites.update({_id: this._id}, {$set: {descriptionWeb: descript, titleWeb: title, imageWebs: imageWeb}});
 
-                      var webCon={};
-                      webCon = {
-                        "descript":descript,
-                        "title":title
-                      };
-                      console.log(webCon);
-                  }
-              } else {
-                    console.log(error);
-              }
-        });
+                    }
+
+                    //precess data for traditional meta prop
+                    else if ((result.content).indexOf('<meta name="description"') !== -1){
+                        var engineDes = (result.content).substring((result.content).lastIndexOf('<title>')+7);
+                        var title = engineDes.slice(0, engineDes.indexOf('</title>'));
+                        title = title.replace(/content="/g, '');
+                        title = title.replace(/"/g, '');
+                        title = $.trim(title);
+
+                        var engineDes = (result.content).substring((result.content).lastIndexOf('<meta name="description"')+24);
+                        var descript = engineDes.slice(0, engineDes.indexOf('>'));
+                        descript = descript.replace(/content="/g, '');
+                        descript = descript.replace(/"/g, '');
+                        descript = descript.replace(/\//g, '');
+                        descript = $.trim(descript);
+
+                        Websites.update({_id: this._id}, {$set: {descriptionWeb: descript, titleWeb: title}});
+                    }
+                } else {
+                      console.log(error);
+                }
+          });
+        }
     },
 
     'click .js-thumbs-up': function(event){
 
-        var i = Websites.findOne({_id:this._id}).thumbsUp;
         var p = Websites.findOne({_id:this._id}).thumbsUpBy;
         var z = Meteor.user().username;
 
         if (p.indexOf(z)==-1){
-            i++;
             p+=Meteor.user().username;
-            Websites.update({_id: this._id}, {$set: {thumbsUp: i}});
+            Websites.update({_id: this._id}, {$inc: {thumbsUp: 1}});
             Websites.update({_id: this._id}, {$set: {thumbsUpBy: p+"&#13;&#10;"}});
             return false;
         }
         if (p.indexOf(z)>=0){
-            i--;
             p = p.replace((z+"&#13;&#10;"), "");
-            Websites.update({_id: this._id}, {$set: {thumbsUp: i}});
+            Websites.update({_id: this._id}, {$inc: {thumbsUp: -1}});
             Websites.update({_id: this._id}, {$set: {thumbsUpBy: p}});
             return false;
         }
@@ -340,28 +336,24 @@ Template.dashboard.events({
 
     'click .js-thumbs-down': function(event){
 
-        var i = Websites.findOne({_id:this._id}).thumbsDown,
-            p = Websites.findOne({_id:this._id}).thumbsDownBy,
+          var  p = Websites.findOne({_id:this._id}).thumbsDownBy,
             z = Meteor.user().username;
 
         if (p.indexOf(z)==-1){
-            i++;
             p+=Meteor.user().username;
-            Websites.update({_id: this._id}, {$set: {thumbsDown: i}});
+            Websites.update({_id: this._id}, {$inc: {thumbsDown: 1}});
             Websites.update({_id: this._id}, {$set: {thumbsDownBy: p+"&#13;&#10;"}});
             return false;
         }
         if (p.indexOf(z)>=0){
-            i--;
             p = p.replace((z+"&#13;&#10;"), "");
-            Websites.update({_id: this._id}, {$set: {thumbsDown: i}});
+            Websites.update({_id: this._id}, {$inc: {thumbsDown: -1}});
             Websites.update({_id: this._id}, {$set: {thumbsDownBy: p}});
             return false;
         }
     },
 
     'click .js-comments': function(event){
-        console.log("saw click");
         window.location.pathname='/'+this._id;
     },
 
@@ -399,6 +391,10 @@ Template.website.events({
 
     'click .dropbtn':function(event){
         document.getElementById("myDropdown").classList.toggle("show");
+    },
+
+    'click .glyphicon-chevron-left': function(event){
+      window.location.pathname='/';
     }
 });
 

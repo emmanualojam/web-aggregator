@@ -321,3 +321,35 @@ form input[type=date]::-webkit-inner-spin-button {
 .contentRow {
   margin-top: 25px;
 }
+.webimg {
+  max-width: 100px;
+  max-height: 50px;
+  float: left;
+}
+.webimgCom {
+  max-width: 250px;
+  max-height: 120px;
+  float: left;
+}
+.tle {
+  margin-left: 260px;
+}
+.limitTextTitle {
+  padding-left: 5px;
+  overflow: hidden;
+   text-overflow: ellipsis;
+   display: -webkit-box;
+   line-height: 16px;     /* fallback */
+   max-height: 32px;      /* fallback */
+   -webkit-line-clamp: 2; /* number of lines to show */
+   -webkit-box-orient: vertical;
+}
+.limitTextDesc {
+  overflow: hidden;
+   text-overflow: ellipsis;
+   display: -webkit-box;
+   line-height: 16px;     /* fallback */
+   max-height: 48px;      /* fallback */
+   -webkit-line-clamp: 3; /* number of lines to show */
+   -webkit-box-orient: vertical;
+}
